@@ -47,14 +47,21 @@ async def start():
     cl.user_session.set("chat_history", [])  
     cl.user_session.set("config", config)
     cl.user_session.set("agent", agent)
-        
+    counter =  0 
+    cl.user_session.set("counter", counter)    
     await cl.Message(content="Welcome to the Study mode Asistant AI Assistant! How can I help you with today?").send()
 
 
 
-
 @cl.on_message
-async def main():
+async def main(message:cl.Message):
+     counter = cl.user_session.get("counter") or 0
+     counter+=1   
+     cl.user_session.set("counter",counter)
+     msg = cl.Message(content=f"Thinking... {counter}")
+     await msg.send()    
+     
+    
     
 
 
