@@ -10,7 +10,7 @@ from agents.run import RunConfig
 # Load the environment variables from the .env file
 load_dotenv()
 
-gemini_api_key = os.getenv("GOOGLE_API_KEY")
+gemini_api_key = os.getenv("GEMINI_API_KEY")
 
 # Check if the API key is present; if not, raise an error
 if not gemini_api_key:
@@ -33,13 +33,30 @@ async def start():
     )
     
     
+    config: RunConfig = RunConfig(
+        model=model,
+        model_provider=external_client,
+        tracing_disabled=True
+    )
+    
+    agent  = Agent(
+          name = "Assistant" , 
+        instructions= "You are a helpful assistant" ,
+        model= model
+    )
+    cl.user_session.set("chat_history", [])  
+    cl.user_session.set("config", config)
+    cl.user_session.set("agent", agent)
+        
+    await cl.Message(content="Welcome to the Study mode Asistant AI Assistant! How can I help you with today?").send()
 
-    await cl.Message(content="Hello Baby").send()
 
 
-def main():
-    print("Hello from openai-study-mode!")
+
+@cl.on_message
+async def main():
+    
 
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()
